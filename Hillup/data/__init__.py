@@ -5,7 +5,7 @@ from os import unlink, close
 from itertools import product
 from tempfile import mkstemp
 
-import NED10m, NED100m, NED1km, SRTM1, SRTM3
+import NED10m, NED100m, NED1km, SRTM1, SRTM3, CDED50k
 
 from ModestMaps.Core import Coordinate
 from TileStache.Geography import SphericalMercator
@@ -53,7 +53,7 @@ class SeedingLayer (Layer):
 class Provider:
     """ TileStache provider for generating tiles of DEM slope and aspect data.
     
-        Source parameter can be "srtm-ned" (default) or "ned-only".
+        Source parameter can be "srtm-ned" (default), "ned-only" or "srtm-cded".
 
         See http://tilestache.org/doc/#custom-providers for information
         on how the Provider object interacts with TileStache.
@@ -79,6 +79,10 @@ class Provider:
         
         elif self.source == 'ned-only':
             providers = choose_providers_ned(zoom)
+            
+        elif self.source == 'srtm-cded':
+            print "You are using data from Canada Geobase. \n You need to adhere to the GeoBase Unrestricted Use Licence at http://www.geobase.ca/geobase/en/licence.jsp. Specifically, you need to acknowledge attribution."
+            providers = choose_providers_cded(zoom)
 
         else:
             raise Exception('Unknown source "%s"' % source)
@@ -218,6 +222,14 @@ def choose_providers_srtm(zoom):
     proportion = 1. - (zoom - float(bottom.ideal_zoom)) / difference
 
     return [(bottom, proportion), (top, 1 - proportion)]
+
+def choose_providers_cded(zoom):
+    """ Return a list of data sources and proportions for given zoom level.
+        
+        Each data source is a module such as SRTM1 or SRTM3, and the proportions
+        must all add up to one. Return list has either one or two items.
+    """
+    return [(CDED50k, 1)]
 
 def choose_providers_ned(zoom):
     """ Return a list of data sources and proportions for given zoom level.

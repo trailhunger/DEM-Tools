@@ -33,8 +33,8 @@ parser.add_option('-t', '--tile-directory', dest='tiledir',
                   help='Directory for generated slope/aspect tiles, default "%(tiledir)s". This directory will be used as the "source_dir" for Hillup.tiles:Provider shaded renderings.' % defaults)
 
 parser.add_option('-s', '--source', dest='source',
-                  help='Data source for elevations. One of "srtm-ned" for SRTM and NED data or "ned-only" for US-only downsample NED, default "%(source)s".' % defaults,
-                  choices=('srtm-ned', 'ned-only'))
+                  help='Data source for elevations. One of "srtm-ned" for SRTM and NED data, "ned-only" for US-only downsample NED, "srtm-cded" for SRTM and CDED (Canada Digital Elevation Data). Note that the CDED source does not currently support merging with NED or SRTM at the borders nor the map sheets near the North Pole which do not follow the standard form. default "%(source)s".' % defaults,
+                  choices=('srtm-ned', 'ned-only', 'srtm-cded'))
 
 parser.add_option('--tmp-directory', dest='tmpdir',
                   help='Optional working directory for temporary files. Consider a ram disk for this.')
